@@ -1,5 +1,20 @@
 const { json } = require("express/lib/response");
 const videoGame = require("../models/videojuegos.model");
+const characters = require("../models/personajes.model");
+
+
+const getGamesByTitleCharacter = async (req, res) => {
+    const title = req.params.title;
+    try{
+        const gamesByTitle = await videoGame.find({title: title});
+
+        console.log/(gamesByTitle);
+        const charactersByTitle = await characters.find({game: gamesByTitle[0].collectio});
+        return res.status(200).json(charactersByTitle);
+    } catch (error){
+        return res.status(500).json(error);
+    }
+};
 
 const getAllGames = async(req, res, next) =>{
     try {
@@ -34,7 +49,7 @@ const postNewGames = async (req, res, next) => {
 
     try {
 
-        console.log(req.body.titulo);
+        /* console.log(req.body.titulo); */
 
         const newGame = new videoGame(req.body);
 
@@ -84,4 +99,4 @@ const patchGame = async (req, res, next) => {
 
 }
 
-module.exports = {getAllGames, getGamesByID, getGamesByTitle, postNewGames, deleteGame, patchGame};
+module.exports = {getAllGames, getGamesByID, getGamesByTitle, postNewGames, deleteGame, patchGame, getGamesByTitleCharacter};
